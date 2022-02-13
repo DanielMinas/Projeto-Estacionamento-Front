@@ -9,6 +9,12 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EstacionamentoService from '../services/api'
 import {useHistory, useParams} from 'react-router-dom'
+import Card from '@mui/material/Card';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Link from '@mui/material/Link';
+import IconButton from '@mui/material/IconButton';
 
 const theme = createTheme();
 
@@ -91,11 +97,51 @@ const button = () =>{
 
 return (
     <ThemeProvider theme={theme}>
+      <AppBar position="static">
+        <Toolbar>
+
+        
+            <Link  variant="h6" href="/estacionamento"  underline="none" sx={{ display: { xs: 'none', sm: 'block' }, color:'white' }}> 
+            {'Estacionamento'}</Link>
+      
+
+          <Box sx={{ flexGrow: 1 }} />
+
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          
+            
+          
+            <IconButton
+              size="large"
+              color="inherit"
+              href="/login"
+            >
+              <LogoutIcon />
+            </IconButton>
+          </Box>
+         
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="show more"
+              aria-haspopup="true"
+              color="inherit"
+              href="/add-estacionamento"
+            >
+              <LogoutIcon />
+            </IconButton>
+          </Box>
+         
+
+        </Toolbar>
+
+      </AppBar>
       <Container component="main" maxWidth="xs">
+        <Card sx={{ marginTop: 8, height: '100%', width:'500px', display: 'flex', flexDirection: 'column' }}>
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -156,7 +202,7 @@ return (
 
           </Box>
         </Box>
-
+        </Card>
       </Container>
     </ThemeProvider>
   );

@@ -20,6 +20,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import EstacionamentoService from '../services/api'
+import LogoutIcon from '@mui/icons-material/Logout';
+import Fab from '@mui/material/Fab';
+import Link from '@mui/material/Link';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import "./estacionamento-list.css"
 
 
 
@@ -42,6 +47,12 @@ export default function EstacionamentoList() {
 
   const [estacionamento, setEstacionamento] = useState([]);
 
+  const [classificados, setClassificados] = React.useState('');
+
+  const clickClassificados = (event) => {
+    setClassificados(event.target.value);
+  };
+
   useEffect(() => {
     EstacionamentoService.getAllEstacionamento()
       .then((response) => {
@@ -59,41 +70,39 @@ export default function EstacionamentoList() {
       <AppBar position="static">
         <Toolbar>
 
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            Estacionamento
-          </Typography>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="show more"
+              aria-haspopup="true"
+              color="inherit"
+              href="/estacionamento"
+            >
+              <DirectionsCarIcon />
+            </IconButton>
+          </Box>
+
+         
+          <Link variant="h6" href="/estacionamento" underline="none" sx={{ display: { xs: 'none', sm: 'block' }, color: 'white' }}>
+          {'Estacionamento'}     <DirectionsCarIcon /></Link>
+          
+
 
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <FormControl fullWidth>
 
-              <InputLabel id="demo-simple-select-label">Classificados</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Age"
-              >
-                <FormGroup>
-                  <FormControlLabel control={<Checkbox checked={select}
-                    onChange={handleChange} />} label="Label" />
-                  <FormControlLabel control={<Checkbox checked={select1}
-                    onChange={handleChange1} />} label="Web" />
-                </FormGroup>
-              </Select>
-            </FormControl>
-            <IconButton size="large" color="inherit" href="/add-estacionamento">
 
-              <AddIcon />
 
+            <IconButton
+              size="large"
+              color="inherit"
+              href="/login"
+            >
+              <LogoutIcon />
             </IconButton>
-
           </Box>
+
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -102,9 +111,10 @@ export default function EstacionamentoList() {
               color="inherit"
               href="/add-estacionamento"
             >
-              <AddIcon />
+              <LogoutIcon />
             </IconButton>
           </Box>
+
 
         </Toolbar>
 
@@ -113,11 +123,32 @@ export default function EstacionamentoList() {
         {/* Hero unit */}
 
         <Container sx={{ py: 9 }} maxWidth="md">
+          <Box sx={{ minWidth: 150, maxWidth: 200 }}>
+            <FormControl fullWidth>
+
+              <InputLabel id="demo-simple-select-label">Classificados</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Classificados"
+                value={classificados}
+                onChange={clickClassificados}
+              >
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox checked={select}
+                    onChange={handleChange} />} label="Concluido" />
+                  <FormControlLabel control={<Checkbox checked={select1}
+                    onChange={handleChange1} />} label="Não Concluido" />
+                </FormGroup>
+              </Select>
+            </FormControl>
+          </Box>
           {/* End hero unit */}
-          <Grid container spacing={6}>
+          <Grid container spacing={3}>
+
             {estacionamento.filter((carro) => {
               if (select === true) {
-                return carro.modelo === "FIT"
+                return carro.id === 2
               } else {
                 return carro
               }
@@ -132,7 +163,7 @@ export default function EstacionamentoList() {
               .map(carro => (
                 <Grid item key={carro.id} xs={12} sm={6} md={4}>
                   <Card
-                    sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                    sx={{ height: '100%', marginTop: 2, display: 'flex', flexDirection: 'column' }}
                   >
 
                     <CardContent sx={{ flexGrow: 1 }}>
@@ -145,10 +176,16 @@ export default function EstacionamentoList() {
                       <Typography>
                         Data Entrada {carro.data_entrada}
                       </Typography>
+                      <Typography>
+                        Tempo:{carro.tempo}
+                      </Typography>
+                      <Typography>
+                        Valor:{carro.valor_pago}
+                      </Typography>
                     </CardContent>
-                    <CardActions>
-                      <Button size="small" href={`/edit-estacionamento/${carro.id}`} >Editar</Button>
-                      <Button size="small">Saída</Button>
+                    <CardActions id='CardActions'>
+                      <Button size="small" variant="contained" href={`/edit-estacionamento/${carro.id}`} >Editar</Button>
+                      <Button size="small" variant="contained" id="button-saida" >Saída</Button>
                     </CardActions>
                   </Card>
                 </Grid>
@@ -157,8 +194,12 @@ export default function EstacionamentoList() {
         </Container>
       </main>
       {/* Footer */}
+      <Box id="button-add">
+        <Fab color="primary" aria-label="add" href="/add-estacionamento" >
+          <AddIcon />
+        </Fab>
 
-      {/* End footer */}
+      </Box>      {/* End footer */}
     </ThemeProvider>
   );
 }

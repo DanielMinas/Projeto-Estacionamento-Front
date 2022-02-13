@@ -1,0 +1,13 @@
+
+#button-saida{
+    background-color: #D3D3D3;
+}
+#CardActions{
+    display: flex;
+    justify-content: space-between;
+}
+#button-add{
+    position: fixed;
+    top: 550px;
+    right:80px;
+}

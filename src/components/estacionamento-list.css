@@ -1,6 +1,7 @@
 
 #button-saida{
     background-color: #D3D3D3;
+    color:black
 }
 #CardActions{
     display: flex;
@@ -8,6 +9,13 @@
 }
 #button-add{
     position: fixed;
-    top: 550px;
+    top: 500px;
     right:80px;
+}
+#demo-simple-select-label 
+{
+    color:black
+}
+#demo-simple-select{
+    border: 1px solid black
 }

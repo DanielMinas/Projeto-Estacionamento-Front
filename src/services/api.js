@@ -15,6 +15,9 @@ class EstacionamentoService{
   updateEstacionamento(carroId, carro){
     return axios.put(api +"/put/" +carroId, carro);
   }
+  updateEstacionamentoSaida(carroId, carro){
+    return axios.put(api +"/putSaida/" +carroId, carro);
+  }
 }
 
 export default new EstacionamentoService();

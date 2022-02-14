@@ -24,7 +24,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Fab from '@mui/material/Fab';
 import Link from '@mui/material/Link';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import {useHistory, useParams} from 'react-router-dom'
 import "./estacionamento-list.css"
+import app from "../base";
 
 
 
@@ -52,7 +54,26 @@ export default function EstacionamentoList() {
   const clickClassificados = (event) => {
     setClassificados(event.target.value);
   };
+  const [placa, ] = useState('');
+  const [modelo, setModelo] = useState('');
+ 
 
+  const history = useHistory();
+  const {id} = useParams();
+
+  const saveUpdateSaidaCarro = (e) => {
+    e.preventDefault();
+    const carro = { placa, modelo }
+EstacionamentoService.updateEstacionamentoSaida(id,carro)
+.then((response) => {
+  // {estacionamento.valor_primeira_hora - estacionamento.valor_demais_hora} 
+}).catch(error =>{
+  console.log(error)
+})
+  
+
+  
+}
   useEffect(() => {
     EstacionamentoService.getAllEstacionamento()
       .then((response) => {
@@ -76,15 +97,15 @@ export default function EstacionamentoList() {
               aria-label="show more"
               aria-haspopup="true"
               color="inherit"
-              href="/estacionamento"
+              href="/"
             >
               <DirectionsCarIcon />
             </IconButton>
           </Box>
-
+          <DirectionsCarIcon  sx={{ display: { xs: 'none', sm: 'block'},marginTop:-0.4, marginRight:1 }}/>
          
-          <Link variant="h6" href="/estacionamento" underline="none" sx={{ display: { xs: 'none', sm: 'block' }, color: 'white' }}>
-          {'Estacionamento'}     <DirectionsCarIcon /></Link>
+          <Link variant="h6" href="/" underline="none" sx={{ display: { xs: 'none', sm: 'block' }, color: 'white' }}>
+          {'Estacionamento'}     </Link>
           
 
 
@@ -94,14 +115,16 @@ export default function EstacionamentoList() {
 
 
 
-            <IconButton
-              size="large"
-              color="inherit"
-              href="/login"
-            >
-              <LogoutIcon />
-            </IconButton>
+         
+
+            <LogoutIcon  onClick={() => app.auth().signOut()} sx={{ marginTop:-0.4, marginRight:1 }}/>
+         
+         <Link  onClick={() => app.auth().signOut()} underline="none" sx={{ display: { xs: 'none', sm: 'block' }, color: 'white',marginTop:-0.5  }}>
+         {'Sair'}     </Link>
+          
+
           </Box>
+          
 
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -109,7 +132,7 @@ export default function EstacionamentoList() {
               aria-label="show more"
               aria-haspopup="true"
               color="inherit"
-              href="/add-estacionamento"
+              onClick={() => app.auth().signOut()}
             >
               <LogoutIcon />
             </IconButton>
@@ -123,22 +146,22 @@ export default function EstacionamentoList() {
         {/* Hero unit */}
 
         <Container sx={{ py: 9 }} maxWidth="md">
-          <Box sx={{ minWidth: 150, maxWidth: 200 }}>
+          <Box sx={{ minWidth: 130, maxWidth: 130 }}>
             <FormControl fullWidth>
 
-              <InputLabel id="demo-simple-select-label">Classificados</InputLabel>
+              <InputLabel id="demo-simple-select-label">Todos</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                label="Classificados"
+                label="todos"
                 value={classificados}
                 onChange={clickClassificados}
               >
-                <FormGroup>
+                <FormGroup sx={{ marginLeft:2 }}>
                   <FormControlLabel control={<Checkbox checked={select}
-                    onChange={handleChange} />} label="Concluido" />
+                    onChange={handleChange} />} label="Estacionado" />
                   <FormControlLabel control={<Checkbox checked={select1}
-                    onChange={handleChange1} />} label="Não Concluido" />
+                    onChange={handleChange1} />} label="Não Estacionado" />
                 </FormGroup>
               </Select>
             </FormControl>
@@ -155,7 +178,7 @@ export default function EstacionamentoList() {
             })
               .filter((carro) => {
                 if (select1 === true) {
-                  return carro.modelo === "aoba"
+                  return carro.nao_estacionado === false
                 } else {
                   return carro
                 }
@@ -174,18 +197,23 @@ export default function EstacionamentoList() {
                         Placa: {carro.placa}
                       </Typography>
                       <Typography>
-                        Data Entrada {carro.data_entrada}
+                        Data Entrada: {carro.data_entrada}
                       </Typography>
                       <Typography>
-                        Tempo:{carro.tempo}
+                        Horario de Entrada: {carro.hora_entrada}
                       </Typography>
                       <Typography>
-                        Valor:{carro.valor_pago}
+                        Valor: R$ {carro.valor_primeira_hora + carro.valor_demais_hora },00
                       </Typography>
+                      <Typography>
+                        Horario de Saida: {carro.hora_saida}
+                      </Typography>
+
+                      
                     </CardContent>
                     <CardActions id='CardActions'>
                       <Button size="small" variant="contained" href={`/edit-estacionamento/${carro.id}`} >Editar</Button>
-                      <Button size="small" variant="contained" id="button-saida" >Saída</Button>
+                      <Button size="small" variant="contained" onClick={saveUpdateSaidaCarro} id="button-saida" >Saída</Button>
                     </CardActions>
                   </Card>
                 </Grid>
